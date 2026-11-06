@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Kids & Family Word Mystery 🌟</title>
+  <title>Global Word Clue: Progressive Challenge 🌟</title>
+  <meta name="description" content="Engaging progressive word puzzle with emoji clues and hints. Easy for kids, challenging for adults!" />
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg-dark: #090d16;
+      --card-bg: #141c2e;
       --accent: #38bdf8;
       --success: #22c55e;
       --gold: #fbbf24;
-      --border: rgba(255, 255, 255, 0.1);
+      --border: rgba(255, 255, 255, 0.08);
       --text: #f8fafc;
+      --muted: #94a3b8;
     }
 
     * {
@@ -25,15 +27,15 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 20%, #1e293b, var(--bg));
+      background: radial-gradient(circle at 50% 25%, #1e293b, var(--bg-dark));
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 14px;
-      overflow-x: hidden;
+      padding: 12px;
+      overflow: hidden;
     }
 
     .game-card {
@@ -43,116 +45,136 @@
       background: var(--card-bg);
       border-radius: 24px;
       border: 1px solid var(--border);
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
-      padding: 20px 16px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+      padding: 16px 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
     }
 
-    /* Top HUD */
+    /* HUD Bar */
     .top-bar {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .badge {
       background: rgba(0, 0, 0, 0.35);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 12px;
       font-size: 13px;
       font-weight: 800;
       border: 1px solid var(--border);
-      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
+
+    .badge-gold { color: var(--gold); }
+    .badge-accent { color: var(--accent); }
 
     /* Clue Display */
     .clue-box {
       width: 100%;
       background: rgba(0, 0, 0, 0.25);
-      border: 2px dashed rgba(56, 189, 248, 0.4);
+      border: 2px dashed rgba(56, 189, 248, 0.35);
       border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 20px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      position: relative;
+    }
+
+    .tier-indicator {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--muted);
+      background: rgba(255,255,255,0.06);
+      padding: 2px 8px;
+      border-radius: 8px;
     }
 
     .clue-emoji {
-      font-size: 55px;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+      font-size: 52px;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+      margin-top: 4px;
     }
 
-    .clue-hint-text {
-      font-size: 16px;
+    .clue-text {
+      font-size: 15px;
       font-weight: 700;
       color: #cbd5e1;
+      margin-top: 4px;
     }
 
-    /* Word Tile Slots */
+    /* Word Slots */
     .word-slots {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 24px;
+      gap: 8px;
+      margin-bottom: 18px;
     }
 
     .tile-slot {
-      width: 58px;
-      height: 62px;
-      border: 3px solid var(--border);
-      border-radius: 14px;
+      width: 52px;
+      height: 56px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
       background: rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 900;
       color: #fff;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
 
     .tile-slot.filled {
       border-color: var(--accent);
       background: #0369a1;
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
 
     .tile-slot.hint-given {
       border-color: var(--success);
       background: #15803d;
-      color: #fff;
     }
 
-    /* Selection Keyboard / Letters */
+    /* Letter Grid */
     .letter-options {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
       max-width: 360px;
       margin-bottom: 12px;
     }
 
     .btn-letter {
-      width: 48px;
-      height: 52px;
+      width: 44px;
+      height: 48px;
       background: #334155;
       color: #fff;
       border: none;
-      border-radius: 12px;
-      font-size: 20px;
+      border-radius: 10px;
+      font-size: 19px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      transition: transform 0.1s, background 0.2s;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+      transition: transform 0.08s, background 0.15s;
     }
 
     .btn-letter:active {
@@ -161,34 +183,41 @@
     }
 
     .btn-letter.disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       pointer-events: none;
     }
 
-    .bottom-actions {
+    /* Action Controls */
+    .action-bar {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
       justify-content: center;
-      margin-top: 8px;
     }
 
-    .btn-sub {
-      background: #475569;
+    .btn-action-tool {
+      background: #1e293b;
+      border: 1px solid var(--border);
       color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Win Pop Modal */
+    .btn-action-tool:active {
+      transform: scale(0.95);
+    }
+
+    /* Modal / Popups */
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(9, 13, 22, 0.95);
       backdrop-filter: blur(8px);
       border-radius: 24px;
       display: flex;
@@ -200,23 +229,23 @@
     }
 
     .modal-overlay h1 {
-      font-size: 32px;
+      font-size: 28px;
       color: var(--gold);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .modal-overlay p {
-      font-size: 16px;
-      color: #cbd5e1;
-      margin-bottom: 24px;
+    .star-display {
+      font-size: 28px;
+      margin-bottom: 10px;
+      letter-spacing: 4px;
     }
 
     .btn-cta {
       background: linear-gradient(135deg, var(--success), #16a34a);
       color: #fff;
       border: none;
-      padding: 14px 34px;
-      font-size: 17px;
+      padding: 13px 32px;
+      font-size: 16px;
       font-weight: 800;
       border-radius: 30px;
       cursor: pointer;
@@ -226,49 +255,65 @@
     .btn-cta:active {
       transform: scale(0.96);
     }
+
+    /* Canvas for Confetti */
+    #confetti-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 24px;
+      z-index: 90;
+    }
   </style>
 </head>
 <body>
 
   <div class="game-card">
-    <!-- Win Screen Modal -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Win Modal -->
     <div id="win-modal" class="modal-overlay" style="display: none;">
-      <h1>অসাধারণ! 🎉</h1>
-      <p id="win-desc">তুমি সঠিক শব্দটি বানিয়ে ফেলেছো!</p>
-      <button class="btn-cta" onclick="nextPuzzle()">পরের শব্দ খেলুন ⏩</button>
+      <h1 id="win-heading">SOLVED! 🏆</h1>
+      <div class="star-display" id="star-rating">⭐⭐⭐</div>
+      <p id="win-desc" style="color: #cbd5e1; font-size: 15px; margin-bottom: 22px;">Perfect match!</p>
+      <button class="btn-cta" onclick="nextPuzzle()">CONTINUE ⏩</button>
     </div>
 
     <!-- HUD -->
     <div class="top-bar">
-      <div class="badge">🌟 লেভেল: <span id="level-txt">1</span></div>
-      <div class="badge">⭐ স্কোর: <span id="score-txt">0</span></div>
+      <div class="badge badge-accent">LVL <span id="lvl-txt">1</span></div>
+      <div class="badge badge-gold">⭐ <span id="score-txt">0</span></div>
+      <div class="badge" style="color:#f43f5e;">💡 <span id="hints-txt">3</span></div>
     </div>
 
-    <!-- Clue & Emoji Box -->
+    <!-- Clue Box -->
     <div class="clue-box">
+      <div class="tier-indicator" id="tier-badge">TIER 1 (EASY)</div>
       <div class="clue-emoji" id="clue-emoji">☀️</div>
-      <div class="clue-hint-text" id="clue-hint">দিনের আকাশে আলো ও তাপ দেয়</div>
+      <div class="clue-text" id="clue-text">Gives daylight and heat</div>
     </div>
 
-    <!-- Word Tile Slots -->
+    <!-- Word Slots -->
     <div class="word-slots" id="slots-area"></div>
 
-    <!-- Letter Selection Keyboard -->
+    <!-- Letter Keyboard -->
     <div class="letter-options" id="letters-area"></div>
 
-    <div class="bottom-actions">
-      <button class="btn-sub" onclick="resetCurrentWord()">↩️ মুছে আবার লেখো</button>
+    <!-- Bottom Tool Actions -->
+    <div class="action-bar">
+      <button class="btn-action-tool" onclick="useHint()">💡 Free Hint</button>
+      <button class="btn-action-tool" onclick="resetCurrentWord()">↩️ Clear</button>
     </div>
   </div>
 
   <script>
-    // --- Web Audio API Synth ---
+    // --- Audio Engine ---
     let audioCtx = null;
     function initAudio() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    function playTone(freq, type, duration, vol = 0.15) {
+    function playTone(freq, type, duration, vol = 0.12) {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -282,91 +327,104 @@
       osc.stop(audioCtx.currentTime + duration);
     }
 
-    function soundTap() { playTone(480, 'sine', 0.08, 0.12); }
+    function soundTap() { playTone(520, 'sine', 0.06, 0.1); }
     function soundWin() {
       playTone(523.25, 'triangle', 0.12, 0.2);
       setTimeout(() => playTone(659.25, 'triangle', 0.12, 0.2), 80);
       setTimeout(() => playTone(783.99, 'triangle', 0.25, 0.25), 160);
     }
     function soundFail() {
-      playTone(220, 'sawtooth', 0.15, 0.2);
-      setTimeout(() => playTone(180, 'sawtooth', 0.25, 0.2), 100);
+      playTone(200, 'sawtooth', 0.15, 0.2);
+      setTimeout(() => playTone(150, 'sawtooth', 0.2, 0.2), 100);
     }
 
-    // --- ছোট ও সহজ শব্দের তালিকা (ক্লু ও ইমোজি সহ) ---
-    const PUZZLES = [
-      {
-        word: "SUN",
-        emoji: "☀️",
-        hint: "দিনের আকাশে আলো ও তাপ দেয়",
-        firstLetter: "S"
-      },
-      {
-        word: "CAT",
-        emoji: "🐱",
-        hint: "মিউ মিউ করে ডাকে ও দুধ খায়",
-        firstLetter: "C"
-      },
-      {
-        word: "CAR",
-        emoji: "🚗",
-        hint: "চার চাকার ছোট গাড়ি",
-        firstLetter: "C"
-      },
-      {
-        word: "TREE",
-        emoji: "🌳",
-        hint: "সবুজ পাতা থাকে এবং অক্সিজেন দেয়",
-        firstLetter: "T"
-      },
-      {
-        word: "FISH",
-        emoji: "🐟",
-        hint: "জলে সাঁতার কাটে ও ডাঙ্গায় বাঁচেনা",
-        firstLetter: "F"
-      },
-      {
-        word: "BIRD",
-        emoji: "🐦",
-        hint: "ডানা মেলে আকাশে উড়ে বেড়ায়",
-        firstLetter: "B"
-      },
-      {
-        word: "BALL",
-        emoji: "⚽",
-        hint: "গোল আকারের জিনিস যা দিয়ে খেলি",
-        firstLetter: "B"
-      },
-      {
-        word: "MOON",
-        emoji: "🌙",
-        hint: "রাতের আকাশে আলো দেয়",
-        firstLetter: "M"
-      }
+    // --- Progressive Master Database ---
+    const DATABASE = [
+      // Tier 1: 3-Letter (Levels 1-5)
+      { id: "w3_1", tier: 1, word: "SUN", emoji: "☀️", hint: "Gives daylight and heat" },
+      { id: "w3_2", tier: 1, word: "CAT", emoji: "🐱", hint: "Pet that loves to meow" },
+      { id: "w3_3", tier: 1, word: "CAR", emoji: "🚗", hint: "Four-wheeled motor drive" },
+      { id: "w3_4", tier: 1, word: "DOG", emoji: "🐶", hint: "Loyal barking companion" },
+      { id: "w3_5", tier: 1, word: "BUS", emoji: "🚌", hint: "Large city public transit" },
+
+      // Tier 2: 4-Letter (Levels 6-12)
+      { id: "w4_1", tier: 2, word: "MOON", emoji: "🌙", hint: "Glows in the midnight sky" },
+      { id: "w4_2", tier: 2, word: "STAR", emoji: "⭐", hint: "Twinkling cosmic diamond" },
+      { id: "w4_3", tier: 2, word: "FISH", emoji: "🐟", hint: "Swims underwater with fins" },
+      { id: "w4_4", tier: 2, word: "LION", emoji: "🦁", hint: "The proud jungle monarch" },
+      { id: "w4_5", tier: 2, word: "TREE", emoji: "🌳", hint: "Grows tall with green leaves" },
+      { id: "w4_6", tier: 2, word: "FIRE", emoji: "🔥", hint: "Hot glowing orange flames" },
+      { id: "w4_7", tier: 2, word: "BIRD", emoji: "🐦", hint: "Feathered sky traveler" },
+
+      // Tier 3: 5-Letter Pro (Levels 13+)
+      { id: "w5_1", tier: 3, word: "EARTH", emoji: "🌍", hint: "Our blue living planet" },
+      { id: "w5_2", tier: 3, word: "TIGER", emoji: "🐯", hint: "Striped stealth predator" },
+      { id: "w5_3", tier: 3, word: "OCEAN", emoji: "🌊", hint: "Vast expanse of salt water" },
+      { id: "w5_4", tier: 3, word: "APPLE", emoji: "🍎", hint: "Crisp red healthy fruit" },
+      { id: "w5_5", tier: 3, word: "PLANE", emoji: "✈️", hint: "Jet flying above clouds" },
+      { id: "w5_6", tier: 3, word: "ROBOT", emoji: "🤖", hint: "Mechanical cyber machine" }
     ];
 
-    let currentIdx = 0;
+    // State
+    let currentLevel = 1;
     let score = 0;
-    let currentInput = [];
+    let hintsRemaining = 3;
+    let usedWordIds = new Set();
     let currentPuzzle = null;
+    let currentInput = [];
+    let mistakesInCurrentRound = 0;
+    let roundStartTime = 0;
 
-    const levelTxt = document.getElementById("level-txt");
+    const lvlTxt = document.getElementById("lvl-txt");
     const scoreTxt = document.getElementById("score-txt");
+    const hintsTxt = document.getElementById("hints-txt");
+    const tierBadge = document.getElementById("tier-badge");
     const clueEmoji = document.getElementById("clue-emoji");
-    const clueHint = document.getElementById("clue-hint");
+    const clueText = document.getElementById("clue-text");
     const slotsArea = document.getElementById("slots-area");
     const lettersArea = document.getElementById("letters-area");
     const winModal = document.getElementById("win-modal");
+    const starRating = document.getElementById("star-rating");
     const winDesc = document.getElementById("win-desc");
 
-    function loadPuzzle() {
-      currentPuzzle = PUZZLES[currentIdx];
-      levelTxt.innerText = currentIdx + 1;
-      clueEmoji.innerText = currentPuzzle.emoji;
-      clueHint.innerText = currentPuzzle.hint;
+    function pickNextPuzzle() {
+      // Determine target tier by current level progression
+      let targetTier = 1;
+      if (currentLevel > 12) targetTier = 3;
+      else if (currentLevel > 5) targetTier = 2;
 
-      // প্রথম অক্ষরটি আগেই সাহায্য হিসেবে দিয়ে দেওয়া হলো
-      currentInput = [currentPuzzle.firstLetter];
+      // Filter unseen words matching tier
+      let pool = DATABASE.filter(item => item.tier === targetTier && !usedWordIds.has(item.id));
+      
+      // If pool exhausted in tier, recycle that tier's words
+      if (pool.length === 0) {
+        DATABASE.filter(item => item.tier === targetTier).forEach(item => usedWordIds.delete(item.id));
+        pool = DATABASE.filter(item => item.tier === targetTier);
+      }
+
+      currentPuzzle = pool[Math.floor(Math.random() * pool.length)];
+      usedWordIds.add(currentPuzzle.id);
+    }
+
+    function setupRound() {
+      pickNextPuzzle();
+      lvlTxt.innerText = currentLevel;
+      mistakesInCurrentRound = 0;
+      roundStartTime = Date.now();
+
+      // UI Details
+      clueEmoji.innerText = currentPuzzle.emoji;
+      clueText.innerText = currentPuzzle.hint;
+
+      if (currentPuzzle.tier === 1) tierBadge.innerText = "TIER 1 (EASY)";
+      else if (currentPuzzle.tier === 2) tierBadge.innerText = "TIER 2 (MEDIUM)";
+      else tierBadge.innerText = "TIER 3 (EXPERT)";
+
+      // Pre-fill initial hint for Tier 1 & 2 only; Tier 3 has zero pre-fill
+      currentInput = [];
+      if (currentPuzzle.tier < 3) {
+        currentInput.push(currentPuzzle.word[0]);
+      }
 
       renderSlots();
       renderKeyboard();
@@ -378,9 +436,9 @@
         const slot = document.createElement("div");
         slot.className = "tile-slot";
 
-        if (i === 0) {
+        if (i === 0 && currentPuzzle.tier < 3) {
           slot.classList.add("hint-given");
-          slot.innerText = currentPuzzle.firstLetter;
+          slot.innerText = currentPuzzle.word[0];
         } else if (currentInput[i]) {
           slot.classList.add("filled");
           slot.innerText = currentInput[i];
@@ -393,21 +451,23 @@
 
     function renderKeyboard() {
       lettersArea.innerHTML = "";
+      
+      // Letters to include: missing puzzle characters + random alphabet
+      const startIndex = (currentPuzzle.tier < 3) ? 1 : 0;
+      const targetLetters = currentPuzzle.word.slice(startIndex).split("");
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      let options = [...targetLetters];
 
-      // সঠিক শব্দের বাকি অক্ষরগুলোর সাথে কিছু বাড়তি এলোমেলো অক্ষর মিশিয়ে দেওয়া
-      const correctChars = currentPuzzle.word.slice(1).split("");
-      const randomAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-      let mixedOptions = [...correctChars];
-
-      while (mixedOptions.length < 8) {
-        const r = randomAlphabet[Math.floor(Math.random() * randomAlphabet.length)];
-        if (!mixedOptions.includes(r)) mixedOptions.push(r);
+      // Key capacity scales with difficulty (8 keys for Tier 1, 10 for Tier 2, 12 for Tier 3)
+      const targetCount = currentPuzzle.tier === 1 ? 8 : (currentPuzzle.tier === 2 ? 10 : 12);
+      while (options.length < targetCount) {
+        const r = alphabet[Math.floor(Math.random() * alphabet.length)];
+        if (!options.includes(r)) options.push(r);
       }
 
-      // ওলটপালট করা (Shuffle)
-      mixedOptions.sort(() => 0.5 - Math.random());
+      options.sort(() => 0.5 - Math.random());
 
-      mixedOptions.forEach(char => {
+      options.forEach(char => {
         const btn = document.createElement("button");
         btn.className = "btn-letter";
         btn.innerText = char;
@@ -424,55 +484,141 @@
         soundTap();
         renderSlots();
 
-        // পুরো শব্দ পূরণ হয়েছে কি না পরীক্ষা
         if (currentInput.length === currentPuzzle.word.length) {
-          checkWord();
+          validateWord();
         }
+      }
+    }
+
+    function useHint() {
+      initAudio();
+      if (hintsRemaining <= 0) return;
+      if (currentInput.length >= currentPuzzle.word.length) return;
+
+      const nextTargetChar = currentPuzzle.word[currentInput.length];
+      currentInput.push(nextTargetChar);
+      hintsRemaining--;
+      hintsTxt.innerText = hintsRemaining;
+      soundTap();
+      renderSlots();
+
+      // Disable used hint letter from keyboard
+      const btns = lettersArea.querySelectorAll(".btn-letter:not(.disabled)");
+      for (let b of btns) {
+        if (b.innerText === nextTargetChar) {
+          b.classList.add("disabled");
+          break;
+        }
+      }
+
+      if (currentInput.length === currentPuzzle.word.length) {
+        validateWord();
       }
     }
 
     function resetCurrentWord() {
       initAudio();
       soundTap();
-      currentInput = [currentPuzzle.firstLetter];
+      currentInput = (currentPuzzle.tier < 3) ? [currentPuzzle.word[0]] : [];
       renderSlots();
-      // বাটনগুলো সক্রিয় করা
       const btns = lettersArea.querySelectorAll(".btn-letter");
       btns.forEach(b => b.classList.remove("disabled"));
     }
 
-    function checkWord() {
+    function validateWord() {
       const typed = currentInput.join("");
       if (typed === currentPuzzle.word) {
         soundWin();
-        score += 10;
+        triggerConfetti();
+
+        // Calculate Star Rating
+        let stars = "⭐⭐⭐";
+        let points = 25;
+        if (mistakesInCurrentRound === 1) { stars = "⭐⭐"; points = 18; }
+        else if (mistakesInCurrentRound > 1) { stars = "⭐"; points = 10; }
+
+        // Speed Bonus (< 6 sec)
+        if ((Date.now() - roundStartTime) < 6000) {
+          points += 10;
+        }
+
+        score += points;
         scoreTxt.innerText = score;
-        winDesc.innerText = `অভিনন্দন! সঠিক শব্দটি হলো: ${currentPuzzle.word} ${currentPuzzle.emoji}`;
+        starRating.innerText = stars;
+        winDesc.innerText = `Awesome! Solved word: ${currentPuzzle.word} ${currentPuzzle.emoji}`;
+
         setTimeout(() => {
           winModal.style.display = "flex";
-        }, 300);
+        }, 350);
       } else {
         soundFail();
-        // লাল হয়ে কাঁপবে
+        mistakesInCurrentRound++;
         const slots = slotsArea.querySelectorAll(".tile-slot");
         slots.forEach((s, idx) => {
-          if (idx > 0) s.style.backgroundColor = "#ef4444";
+          if (currentPuzzle.tier < 3 && idx === 0) return;
+          s.style.backgroundColor = "#ef4444";
         });
 
         setTimeout(() => {
           resetCurrentWord();
-        }, 700);
+        }, 650);
       }
     }
 
     function nextPuzzle() {
       winModal.style.display = "none";
-      currentIdx = (currentIdx + 1) % PUZZLES.length;
-      loadPuzzle();
+      currentLevel++;
+      setupRound();
     }
 
-    // Launch Game
-    loadPuzzle();
+    // --- Particle Confetti Engine ---
+    const confettiCanvas = document.getElementById("confetti-canvas");
+    const cCtx = confettiCanvas.getContext("2d");
+    let confettiList = [];
+
+    function triggerConfetti() {
+      confettiCanvas.width = confettiCanvas.clientWidth;
+      confettiCanvas.height = confettiCanvas.clientHeight;
+      confettiList = [];
+      const colors = ["#38bdf8", "#fbbf24", "#22c55e", "#f43f5e", "#a855f7"];
+      for (let i = 0; i < 40; i++) {
+        confettiList.push({
+          x: confettiCanvas.width / 2,
+          y: confettiCanvas.height / 2,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.7) * 9,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: Math.random() * 5 + 4,
+          alpha: 1
+        });
+      }
+      requestAnimationFrame(runConfetti);
+    }
+
+    function runConfetti() {
+      cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      for (let i = confettiList.length - 1; i >= 0; i--) {
+        const c = confettiList[i];
+        c.x += c.vx;
+        c.y += c.vy;
+        c.vy += 0.2; // Gravity
+        c.alpha -= 0.02;
+
+        if (c.alpha <= 0) {
+          confettiList.splice(i, 1);
+        } else {
+          cCtx.save();
+          cCtx.globalAlpha = c.alpha;
+          cCtx.fillStyle = c.color;
+          cCtx.fillRect(c.x, c.y, c.size, c.size);
+          cCtx.restore();
+        }
+      }
+      if (confettiList.length > 0) requestAnimationFrame(runConfetti);
+    }
+
+    // Initialize
+    setupRound();
   </script>
 </body>
 </html>
